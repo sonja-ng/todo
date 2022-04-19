@@ -1,10 +1,14 @@
 import './App.css';
 import React from 'react';
 
-function Todo({todo}){
+function Todo({todo, completeTodos, index, deleteTodo}){
   return(
     <div className="todo">
+      <div style={{textDecoration: todo.isCompleted ? "line-through": ""}}>
       {todo.text}
+      </div>
+      <button onClick={()=> completeTodos(index)}>Completed</button>
+      <button onClick={()=> deleteTodo(index)}>X</button>
     </div>
   );
 };
@@ -32,9 +36,12 @@ function TodoForm({addTodo}){
 
 function App() {
   const [todos, setTodos] = React.useState([
-    { text: "learn react" },
-    { text: "meet friend" },
-    { text: "build really cool app" }
+    { text: "learn react", 
+      isCompleted: false },
+    { text: "meet friend",
+      isCompleted: false },
+    { text: "build really cool app",
+      isCompleted: false }
   ])
 
   const addTodo = (task) => {
@@ -42,10 +49,27 @@ function App() {
     setTodos(newTodos);
   }
 
+  const completeTodos = idx => {
+    const newTodos = [...todos];
+    newTodos[idx].isCompleted = true;
+    setTodos(newTodos);
+  }
+
+  const deleteTodo = idx => {
+    const newTodos = [...todos];
+    newTodos.splice(idx, 1);
+    setTodos(newTodos);
+  }
+ 
   return (
     <div className="app">
       <div className="todo-list">
-      {todos.map((todo, idx) => <Todo key={idx} index={idx} todo={todo}/>)}
+      {todos.map((todo, idx) => <Todo 
+        key={idx} 
+        index={idx} 
+        todo={todo} 
+        deleteTodo={deleteTodo} 
+        completeTodos={completeTodos}/>)}
         </div>
         <TodoForm addTodo={addTodo}/>
     </div>
